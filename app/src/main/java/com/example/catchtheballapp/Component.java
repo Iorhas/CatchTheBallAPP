@@ -1,6 +1,7 @@
 package com.example.catchtheballapp;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 
 public class Component extends View {
+
+    Statistics statistics = new Statistics();
     DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
     int edge_bottom=metrics.heightPixels-100;
     int edge_top=50;
@@ -31,22 +34,16 @@ public class Component extends View {
     MoveBall moveBall = new MoveBall();
     Runnable runnable;
     Handler handler;
-    int speed = 10;
-    private Paint p, p1, p2, p3;
+    private Paint p, p1, p2, p3,p4;
     Akcelerometr akcelerometr = new Akcelerometr(getContext());
-    //int edge_left = 200;
-   // int edge_top = 300;
-    //int edge_right = 880;
-    //int edge_bottom = 1620;
-int edge_bottom_plate=edge_bottom-75;
     private Plate plate = new Plate(metrics.widthPixels/2, edge_bottom-25, 50);
     private Ball ball = new Ball(540, edge_top, 50);
     private Ball blackBall = new Ball(540, edge_top, 50);
     private Ball orangeBall = new Ball(540, edge_top, 50);
     int x = plate.get_x_pos();
-
     int points = 0;
     int life = 2;
+
 
     @SuppressLint("ShowToast")
     @Override
@@ -79,7 +76,10 @@ int edge_bottom_plate=edge_bottom-75;
         p2.setTextSize(60);
         p3 = new Paint(Paint.ANTI_ALIAS_FLAG);
         p3.setColor(Color.YELLOW);
+        p4 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p4.setColor(Color.BLACK);
     }
+
 
 
     @Override
@@ -87,13 +87,13 @@ int edge_bottom_plate=edge_bottom-75;
 
         super.onDraw(canvas);
         handler.postDelayed(runnable, 10);
-        canvas.drawRect(edge_left - 50, edge_top - 50, edge_right + 50, edge_bottom + 50, p1);
+        canvas.drawRect(edge_left - 50, edge_top - 50, edge_right + 50, edge_bottom + 50, p4);
         canvas.drawRect(edge_left, edge_top, edge_right, edge_bottom, p);
 
         // balls
         canvas.drawCircle(ball.getX_pos(), ball.getY_pos(), ball.getRad(), p2);
         canvas.drawCircle(orangeBall.getX_pos(), orangeBall.getY_pos(), orangeBall.getRad(), p3);
-        canvas.drawCircle(blackBall.getX_pos(), blackBall.getY_pos(), blackBall.getRad(), p1);
+        canvas.drawCircle(blackBall.getX_pos(), blackBall.getY_pos(), blackBall.getRad(), p4);
         // plate
         canvas.drawRect( plate.get_x_pos() - 100, plate.get_y_pos() - 20,  plate.get_x_pos() + 100, plate.get_y_pos() + 20, p2);
         //move plate
@@ -113,15 +113,16 @@ int edge_bottom_plate=edge_bottom-75;
             blackBall.setY_pos(0);
             blackBall.setX_pos(moveBall.mathRandom(edge_right, edge_left));
         }
-        if (orangeBall.getY_pos() >= edge_bottom-30) {
-            orangeBall.setY_pos(0);
+        if (orangeBall.getY_pos() >= edge_bottom-30)
+       {
+            orangeBall.setY_pos(-1000);
             orangeBall.setX_pos(moveBall.mathRandom(edge_right, edge_left));
         }
 
         if (start_game) {
             plate.set_x_pos(x);
             ball.setY_pos(moveBall.moveBall(ball.getY_pos(), 23));
-            orangeBall.setY_pos(moveBall.moveBall(orangeBall.getY_pos(), 23));
+            orangeBall.setY_pos(moveBall.moveBall(orangeBall.getY_pos(), 28));
             blackBall.setY_pos(moveBall.moveBall(blackBall.getY_pos(), 24));
         }
 
@@ -138,21 +139,25 @@ int edge_bottom_plate=edge_bottom-75;
             life = life - 1;
 
         }
+        // po porazce
         if (moveBall.checkLife(life)) {
             start_game = false;
             ball.setY_pos(0);
             orangeBall.setY_pos(0);
             blackBall.setY_pos(0);
-
             life = 2;
             points = 0;
             Toast toast= Toast.makeText(getContext(),toastText,Toast.LENGTH_SHORT);
             toast.show();
 
         }
-        canvas.drawText("Life" + ":" + life, 200, 300, p2);
-        canvas.drawText("Points" + ":" + points, 480, 300, p2);
+        if(points>=statistics.getPoints())
+            statistics.setPoints(points);
 
+
+        canvas.drawText("Life" + ":" + life, edge_left+50, 50, p2);
+        canvas.drawText("Points" + ":" + points, 380, 50, p2);
+        canvas.drawText("Highest "+ ":"+statistics.getPoints(),edge_right-350,50,p2);
 
     }
 
