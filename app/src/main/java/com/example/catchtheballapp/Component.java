@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 public class Component extends View {
 
-    Statistics statistics = new Statistics();
+    Statistics statistics = new Statistics(0);
     DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
     int edge_bottom=metrics.heightPixels-100;
     int edge_top=50;
@@ -43,6 +43,7 @@ public class Component extends View {
     int x = plate.get_x_pos();
     int points = 0;
     int life = 2;
+    public static int temp;
 
 
     @SuppressLint("ShowToast")
@@ -53,6 +54,7 @@ public class Component extends View {
 
             start_game = true;
         return super.onTouchEvent(event);
+
     }
     public Component(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -88,7 +90,7 @@ public class Component extends View {
         super.onDraw(canvas);
         handler.postDelayed(runnable, 10);
         canvas.drawRect(edge_left - 50, edge_top - 50, edge_right + 50, edge_bottom + 50, p4);
-        canvas.drawRect(edge_left, edge_top, edge_right, edge_bottom, p);
+        canvas.drawRect(edge_left, edge_top, edge_right, edge_bottom-15, p);
 
         // balls
         canvas.drawCircle(ball.getX_pos(), ball.getY_pos(), ball.getRad(), p2);
@@ -139,6 +141,16 @@ public class Component extends View {
             life = life - 1;
 
         }
+        if(points>statistics.getPoints()) {
+
+            statistics.setPoints(points);
+
+        }
+        if(points>temp)
+        {
+            temp=points;
+        }
+
         // po porazce
         if (moveBall.checkLife(life)) {
             start_game = false;
@@ -147,18 +159,13 @@ public class Component extends View {
             blackBall.setY_pos(0);
             life = 2;
             points = 0;
+
             Toast toast= Toast.makeText(getContext(),toastText,Toast.LENGTH_SHORT);
             toast.show();
-
         }
-        if(points>=statistics.getPoints())
-            statistics.setPoints(points);
-
-
         canvas.drawText("Life" + ":" + life, edge_left+50, 50, p2);
         canvas.drawText("Points" + ":" + points, 380, 50, p2);
         canvas.drawText("Highest "+ ":"+statistics.getPoints(),edge_right-350,50,p2);
-
     }
 
 
