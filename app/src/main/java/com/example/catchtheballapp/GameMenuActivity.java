@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import static com.example.catchtheballapp.Component.temp;
+
 
 public class GameMenuActivity extends AppCompatActivity {
 private Button button,button2;

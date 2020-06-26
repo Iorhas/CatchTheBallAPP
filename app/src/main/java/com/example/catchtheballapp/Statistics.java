@@ -3,7 +3,7 @@ package com.example.catchtheballapp;
 import android.content.SharedPreferences;
 import android.view.View;
 public class Statistics{
-       public  int points;
+       private  int points;
 
     public Statistics(int points) {
         this.points = points;

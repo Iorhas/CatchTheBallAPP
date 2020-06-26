@@ -1,9 +1,7 @@
 package com.example.catchtheballapp;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,10 +12,10 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.util.AttributeSet;
 
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
+
+
+import static com.example.catchtheballapp.Main2Activity.txt;
 
 
 public class Component extends View {
@@ -44,8 +42,8 @@ public class Component extends View {
     int points = 0;
     int life = 2;
     public static int temp;
-
-
+    int jj;
+public static int zmienna;
     @SuppressLint("ShowToast")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -126,6 +124,7 @@ public class Component extends View {
             ball.setY_pos(moveBall.moveBall(ball.getY_pos(), 23));
             orangeBall.setY_pos(moveBall.moveBall(orangeBall.getY_pos(), 28));
             blackBall.setY_pos(moveBall.moveBall(blackBall.getY_pos(), 24));
+
         }
 
         // counting points
@@ -146,23 +145,28 @@ public class Component extends View {
             statistics.setPoints(points);
 
         }
-        if(points>temp)
-        {
-            temp=points;
-        }
 
-        // po porazce
+
+
         if (moveBall.checkLife(life)) {
             start_game = false;
             ball.setY_pos(0);
             orangeBall.setY_pos(0);
             blackBall.setY_pos(0);
+
             life = 2;
             points = 0;
 
             Toast toast= Toast.makeText(getContext(),toastText,Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        if(points >= temp)
+            temp=points;
+
+//temp=zmienna;
+//temp_2= txt;
+
         canvas.drawText("Life" + ":" + life, edge_left+50, 50, p2);
         canvas.drawText("Points" + ":" + points, 380, 50, p2);
         canvas.drawText("Highest "+ ":"+statistics.getPoints(),edge_right-350,50,p2);

@@ -1,4 +1,3 @@
-
 package com.example.catchtheballapp;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,9 +19,17 @@ import static com.example.catchtheballapp.Component.temp;
 
 public class Main2Activity extends AppCompatActivity {
 
-    String txt;
+    static String txt;
+    public   int temp_2;
     TextView textView;
-
+int function()
+{
+    if(temp<temp_2)
+    {
+        temp=temp_2;
+    }
+    return temp;
+}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,26 +37,28 @@ public class Main2Activity extends AppCompatActivity {
         textView = findViewById(R.id.textView2);
         textView.setTextColor(Color.RED);
         textView.setTextSize(18);
-    }
-    @Override
-    protected void onResume() {
-
-
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         txt = sharedPref.getString("dane", "5");
         textView.setText((txt));
-        super.onResume();
 
     }
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+    @Override
     protected void onPause() {
-
-
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("dane", "Best score"+":"+ temp);
+
+        temp_2 = Integer.parseInt(sharedPref.getString("dane1", String.valueOf(5)));
+        function();
+        editor.putString("dane1", String.valueOf(temp));
         textView.setText((txt));
+
         editor.apply();
+
+
         super.onPause();
 
 
