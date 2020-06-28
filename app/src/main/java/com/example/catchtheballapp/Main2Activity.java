@@ -18,18 +18,17 @@ import org.w3c.dom.Text;
 import static com.example.catchtheballapp.Component.temp;
 
 public class Main2Activity extends AppCompatActivity {
-
     static String txt;
-    public   int temp_2;
+    public int temp_2;
     TextView textView;
-int function()
-{
-    if(temp<temp_2)
+    int function()
     {
-        temp=temp_2;
+        if(temp<temp_2)
+        {
+            temp=temp_2;
+        }
+        return temp;
     }
-    return temp;
-}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +37,8 @@ int function()
         textView.setTextColor(Color.RED);
         textView.setTextSize(18);
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        txt = sharedPref.getString("dane", "5");
-        textView.setText((txt));
+        txt = sharedPref.getString("dane4", "0");
+        textView.setText(("Best Score"+txt));
 
     }
     @Override
@@ -51,10 +50,10 @@ int function()
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        temp_2 = Integer.parseInt(sharedPref.getString("dane1", String.valueOf(5)));
+        temp_2 = Integer.parseInt(sharedPref.getString("dane4", "0"));
         function();
-        editor.putString("dane1", String.valueOf(temp));
-        textView.setText((txt));
+        editor.putString("dane4", String.valueOf(temp));
+       // textView.setText((txt));
 
         editor.apply();
 

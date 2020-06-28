@@ -22,9 +22,9 @@ public class Component extends View {
 
     Statistics statistics = new Statistics(0);
     DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-    int edge_bottom=metrics.heightPixels-100;
-    int edge_top=50;
-    int edge_right= metrics.widthPixels-50;
+    int edge_bottom = metrics.heightPixels - 100;
+    int edge_top = 50;
+    int edge_right = metrics.widthPixels - 50;
     int edge_left = 50;
     String toastText = "Przegrałeś, kliknij w ekran by rozpocząć nową grę.";
     boolean start_game = true;
@@ -32,9 +32,9 @@ public class Component extends View {
     MoveBall moveBall = new MoveBall();
     Runnable runnable;
     Handler handler;
-    private Paint p, p1, p2, p3,p4;
+    private Paint p, p1, p2, p3, p4;
     Akcelerometr akcelerometr = new Akcelerometr(getContext());
-    private Plate plate = new Plate(metrics.widthPixels/2, edge_bottom-25, 50);
+    private Plate plate = new Plate(metrics.widthPixels / 2, edge_bottom - 25, 50);
     private Ball ball = new Ball(540, edge_top, 50);
     private Ball blackBall = new Ball(540, edge_top, 50);
     private Ball orangeBall = new Ball(540, edge_top, 50);
@@ -42,18 +42,16 @@ public class Component extends View {
     int points = 0;
     int life = 2;
     public static int temp;
-    int jj;
-public static int zmienna;
+
     @SuppressLint("ShowToast")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN)
-
             start_game = true;
         return super.onTouchEvent(event);
-
     }
+
     public Component(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -80,41 +78,37 @@ public static int zmienna;
         p4.setColor(Color.BLACK);
     }
 
-
-
     @Override
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
         handler.postDelayed(runnable, 10);
         canvas.drawRect(edge_left - 50, edge_top - 50, edge_right + 50, edge_bottom + 50, p4);
-        canvas.drawRect(edge_left, edge_top, edge_right, edge_bottom-15, p);
+        canvas.drawRect(edge_left, edge_top, edge_right, edge_bottom - 15, p);
 
         // balls
         canvas.drawCircle(ball.getX_pos(), ball.getY_pos(), ball.getRad(), p2);
         canvas.drawCircle(orangeBall.getX_pos(), orangeBall.getY_pos(), orangeBall.getRad(), p3);
         canvas.drawCircle(blackBall.getX_pos(), blackBall.getY_pos(), blackBall.getRad(), p4);
         // plate
-        canvas.drawRect( plate.get_x_pos() - 100, plate.get_y_pos() - 20,  plate.get_x_pos() + 100, plate.get_y_pos() + 20, p2);
+        canvas.drawRect(plate.get_x_pos() - 100, plate.get_y_pos() - 20, plate.get_x_pos() + 100, plate.get_y_pos() + 20, p2);
         //move plate
-        x=movePlatee.movePlate(akcelerometr.getValue0(),plate.get_x_pos());
+        x = movePlatee.movePlate(akcelerometr.getValue0(), plate.get_x_pos());
 
         if (x >= edge_right - 80 || x <= edge_left + 80) {
             x = plate.get_x_pos();
         }
 
-
-        if (ball.getY_pos() >= edge_bottom-30) {
+        if (ball.getY_pos() >= edge_bottom - 30) {
             ball.setY_pos(0);
             ball.setX_pos(moveBall.mathRandom(edge_right, edge_left));
 
         }
-        if (blackBall.getY_pos() >= edge_bottom-30) {
+        if (blackBall.getY_pos() >= edge_bottom - 30) {
             blackBall.setY_pos(0);
             blackBall.setX_pos(moveBall.mathRandom(edge_right, edge_left));
         }
-        if (orangeBall.getY_pos() >= edge_bottom-30)
-       {
+        if (orangeBall.getY_pos() >= edge_bottom - 30) {
             orangeBall.setY_pos(-1000);
             orangeBall.setX_pos(moveBall.mathRandom(edge_right, edge_left));
         }
@@ -129,50 +123,46 @@ public static int zmienna;
 
         // counting points
         if (moveBall.checkHit(plate.get_x_pos(), ball.getX_pos(), plate.get_y_pos(), ball.getY_pos())) {
-            points=moveBall.returnPoints(points,10);
+            points = moveBall.returnPoints(points, 10);
 
         }
         if (moveBall.checkHit(plate.get_x_pos(), orangeBall.getX_pos(), plate.get_y_pos(), orangeBall.getY_pos())) {
-            points = moveBall.returnPoints(points,20);
+            points = moveBall.returnPoints(points, 20);
 
         }
         if (moveBall.checkHit(plate.get_x_pos(), blackBall.getX_pos(), plate.get_y_pos(), blackBall.getY_pos())) {
             life = life - 1;
 
         }
-        if(points>statistics.getPoints()) {
+        if (points > statistics.getPoints()) {
 
             statistics.setPoints(points);
 
         }
 
 
-
         if (moveBall.checkLife(life)) {
             start_game = false;
             ball.setY_pos(0);
+            ball.setX_pos(moveBall.mathRandom(edge_right, edge_left));
             orangeBall.setY_pos(0);
+            orangeBall.setX_pos(moveBall.mathRandom(edge_right, edge_left));
             blackBall.setY_pos(0);
+            blackBall.setX_pos(moveBall.mathRandom(edge_right, edge_left));
 
             life = 2;
             points = 0;
 
-            Toast toast= Toast.makeText(getContext(),toastText,Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT);
             toast.show();
         }
 
-        if(points >= temp)
-            temp=points;
+        if (points >= temp)
+            temp = points;
 
-//temp=zmienna;
-//temp_2= txt;
-
-        canvas.drawText("Life" + ":" + life, edge_left+50, 50, p2);
+        canvas.drawText("Life" + ":" + life, edge_left + 50, 50, p2);
         canvas.drawText("Points" + ":" + points, 380, 50, p2);
-        canvas.drawText("Highest "+ ":"+statistics.getPoints(),edge_right-350,50,p2);
+        canvas.drawText("Highest " + ":" + statistics.getPoints(), edge_right - 350, 50, p2);
     }
 
-
 }
-
-

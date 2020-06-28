@@ -31,9 +31,7 @@ public class Akcelerometr  implements SensorEventListener {
     {
         return akcModel.getX();
     }
-
-
-
+    
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
